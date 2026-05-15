@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>1С Инвентаризация</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at top left, rgba(255, 255, 255, 0.55), transparent 34%),
+        linear-gradient(135deg, #ffd21f 0%, #ffb800 32%, #ef2b2d 100%);
+      color: #1f2937;
+    }
+
+    header {
+      background: rgba(31, 41, 55, 0.88);
+      backdrop-filter: blur(10px);
+      color: #fff;
+      padding: 18px 28px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      border-bottom: 3px solid rgba(255, 210, 31, 0.9);
+      box-shadow: 0 10px 30px rgba(127, 29, 29, 0.22);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .logo-1c {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 66px;
+      height: 46px;
+      border-radius: 12px;
+      background: #ffd21f;
+      color: #d71920;
+      font-size: 30px;
+      line-height: 1;
+      font-weight: 900;
+      letter-spacing: -2px;
+      border: 3px solid #ef2b2d;
+      box-shadow: 0 8px 20px rgba(239, 43, 45, 0.28);
+    }
+
+    header h1 {
+      font-size: 24px;
+      font-weight: 700;
+    }
+
+    header span {
+      color: #cbd5e1;
+      font-size: 14px;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 28px auto;
+      padding: 0 18px;
+    }
+
+    .developer {
+      text-align: center;
+      color: #fff;
+      font-weight: 700;
+      margin: 26px 0 10px;
+      text-shadow: 0 2px 8px rgba(127, 29, 29, 0.45);
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 14px;
+      padding: 18px;
+      box-shadow: 0 8px 20px rgba(15, 23, 42, 0.06);
+    }
+
+    .card p {
+      color: #64748b;
+      font-size: 14px;
+      margin-bottom: 8px;
+    }
+
+    .card strong {
+      font-size: 28px;
+    }
+
+    .panel {
+      background: #fff;
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 8px 20px rgba(15, 23, 42, 0.06);
+      margin-bottom: 22px;
+    }
+
+    .panel-title {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 18px;
+    }
+
+    .panel-title h2 {
+      font-size: 20px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1.1fr 1.1fr 0.8fr 0.8fr 0.8fr auto;
+      gap: 12px;
+      align-items: end;
+    }
+
+    label {
+      display: block;
+      color: #475569;
+      font-size: 13px;
+      margin-bottom: 6px;
+      font-weight: 600;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 11px 12px;
+      border: 1px solid #cbd5e1;
+      border-radius: 10px;
+      outline: none;
+      font-size: 14px;
+      background: #fff;
+    }
+
+    input:focus, select:focus {
+      border-color: #2563eb;
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+    }
+
+    button {
+      border: none;
+      border-radius: 10px;
+      padding: 11px 15px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: 0.2s;
+      white-space: nowrap;
+    }
+
+    .btn-primary {
+      background: #2563eb;
+      color: #fff;
+    }
+
+    .btn-primary:hover {
+      background: #1d4ed8;
+    }
+
+    .btn-light {
+      background: #e2e8f0;
+      color: #1f2937;
+    }
+
+    .btn-light:hover {
+      background: #cbd5e1;
+    }
+
+    .btn-danger {
+      background: #fee2e2;
+      color: #b91c1c;
+      padding: 8px 10px;
+    }
+
+    .btn-danger:hover {
+      background: #fecaca;
+    }
+
+    .filters {
+      display: grid;
+      grid-template-columns: 1.5fr 0.8fr 0.8fr auto;
+      gap: 12px;
+      margin-bottom: 16px;
+      align-items: end;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      overflow: hidden;
+      border-radius: 12px;
+    }
+
+    thead {
+      background: #f1f5f9;
+    }
+
+    th, td {
+      padding: 13px 12px;
+      text-align: left;
+      border-bottom: 1px solid #e2e8f0;
+      font-size: 14px;
+    }
+
+    th {
+      color: #475569;
+      font-size: 13px;
+    }
+
+    tbody tr:hover {
+      background: #f8fafc;
+    }
+
+    .badge {
+      display: inline-flex;
+      padding: 5px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .ok {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .low {
+      background: #fef3c7;
+      color: #92400e;
+    }
+
+    .missing {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .muted {
+      color: #64748b;
+    }
+
+    .actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .footer-note {
+      color: #64748b;
+      font-size: 13px;
+      margin-top: 14px;
+      line-height: 1.5;
+    }
+
+    @media (max-width: 900px) {
+      .cards {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .form-grid, .filters {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (max-width: 600px) {
+      header {
+        padding: 16px;
+      }
+
+      .cards, .form-grid, .filters {
+        grid-template-columns: 1fr;
+      }
+
+      table {
+        display: block;
+        overflow-x: auto;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand">
+      <div class="logo-1c">1C</div>
+      <div>
+        <h1>1С Инвентаризация</h1>
+        <span>Простой веб-интерфейс для сверки остатков и учета товаров</span>
+      </div>
+    </div>
+    <button class="btn-light" onclick="exportCSV()">Экспорт CSV</button>
+  </header>
+
+  <main class="container">
+    <section class="cards">
+      <div class="card">
+        <p>Всего позиций</p>
+        <strong id="totalItems">0</strong>
+      </div>
+      <div class="card">
+        <p>На складе</p>
+        <strong id="totalStock">0</strong>
+      </div>
+      <div class="card">
+        <p>Низкий остаток</p>
+        <strong id="lowStock">0</strong>
+      </div>
+      <div class="card">
+        <p>Нет в наличии</p>
+        <strong id="missingStock">0</strong>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-title">
+        <h2>Добавить товар</h2>
+        <span class="muted">Данные сохраняются в браузере</span>
+      </div>
+
+      <form id="itemForm" class="form-grid">
+        <div>
+          <label for="name">Наименование</label>
+          <input id="name" type="text" placeholder="Например: Рубашка женская" required />
+        </div>
+
+        <div>
+          <label for="article">Артикул 1С</label>
+          <input id="article" type="text" placeholder="000001234" required />
+        </div>
+
+        <div>
+          <label for="category">Категория</label>
+          <select id="category">
+            <option>Одежда</option>
+            <option>Обувь</option>
+            <option>Аксессуары</option>
+            <option>Склад</option>
+            <option>Другое</option>
+          </select>
+        </div>
+
+        <div>
+          <label for="stock">Остаток</label>
+          <input id="stock" type="number" min="0" value="1" required />
+        </div>
+
+        <div>
+          <label for="warehouse">Склад</label>
+          <input id="warehouse" type="text" placeholder="Основной" value="Основной" required />
+        </div>
+
+        <button class="btn-primary" type="submit">Добавить</button>
+      </form>
+    </section>
+
+    <section class="panel">
+      <div class="panel-title">
+        <h2>Список товаров</h2>
+        <div class="actions">
+          <button class="btn-light" onclick="loadDemoData()">Демо-данные</button>
+          <button class="btn-light" onclick="clearAll()">Очистить</button>
+        </div>
+      </div>
+
+      <div class="filters">
+        <div>
+          <label for="search">Поиск</label>
+          <input id="search" type="text" placeholder="Название, артикул или склад" oninput="renderTable()" />
+        </div>
+
+        <div>
+          <label for="categoryFilter">Категория</label>
+          <select id="categoryFilter" onchange="renderTable()">
+            <option value="all">Все</option>
+            <option>Одежда</option>
+            <option>Обувь</option>
+            <option>Аксессуары</option>
+            <option>Склад</option>
+            <option>Другое</option>
+          </select>
+        </div>
+
+        <div>
+          <label for="statusFilter">Статус</label>
+          <select id="statusFilter" onchange="renderTable()">
+            <option value="all">Все</option>
+            <option value="ok">В наличии</option>
+            <option value="low">Низкий остаток</option>
+            <option value="missing">Нет в наличии</option>
+          </select>
+        </div>
+
+        <button class="btn-light" onclick="resetFilters()">Сбросить</button>
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Наименование</th>
+            <th>Артикул 1С</th>
+            <th>Категория</th>
+            <th>Склад</th>
+            <th>Остаток</th>
+            <th>Статус</th>
+            <th>Действия</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody"></tbody>
+      </table>
+
+      <p class="footer-note">
+        Для реального проекта этот интерфейс можно подключить к 1С через HTTP-сервис, REST API, OData или обмен файлами CSV/XML. Сейчас это локальный прототип без сервера.
+      </p>
+    </section>
+
+    <div class="developer">Разработчик: Чендарёв Максим</div>
+  </main>
+
+  <script>
+    const STORAGE_KEY = 'one_c_inventory_items';
+
+    let items = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [
+      {
+        id: crypto.randomUUID(),
+        name: 'Блузка женская голубая',
+        article: 'BLZ-0001',
+        category: 'Одежда',
+        stock: 24,
+        warehouse: 'Основной'
+      },
+      {
+        id: crypto.randomUUID(),
+        name: 'Рубашка женская белая',
+        article: 'RSH-0002',
+        category: 'Одежда',
+        stock: 4,
+        warehouse: 'Основной'
+      },
+      {
+        id: crypto.randomUUID(),
+        name: 'Пакет упаковочный',
+        article: 'UPK-0003',
+        category: 'Склад',
+        stock: 0,
+        warehouse: 'Склад №2'
+      }
+    ];
+
+    const itemForm = document.getElementById('itemForm');
+
+    itemForm.addEventListener('submit', function(event) {
+      event.preventDefault();
+
+      const newItem = {
+        id: crypto.randomUUID(),
+        name: document.getElementById('name').value.trim(),
+        article: document.getElementById('article').value.trim(),
+        category: document.getElementById('category').value,
+        stock: Number(document.getElementById('stock').value),
+        warehouse: document.getElementById('warehouse').value.trim()
+      };
+
+      items.push(newItem);
+      saveItems();
+      itemForm.reset();
+      document.getElementById('stock').value = 1;
+      document.getElementById('warehouse').value = 'Основной';
+      renderTable();
+    });
+
+    function getStatus(stock) {
+      if (stock === 0) {
+        return {
+          key: 'missing',
+          title: 'Нет в наличии',
+          className: 'missing'
+        };
+      }
+
+      if (stock <= 5) {
+        return {
+          key: 'low',
+          title: 'Низкий остаток',
+          className: 'low'
+        };
+      }
+
+      return {
+        key: 'ok',
+        title: 'В наличии',
+        className: 'ok'
+      };
+    }
+
+    function renderTable() {
+      const tableBody = document.getElementById('tableBody');
+      const search = document.getElementById('search').value.toLowerCase();
+      const category = document.getElementById('categoryFilter').value;
+      const status = document.getElementById('statusFilter').value;
+
+      const filteredItems = items.filter(item => {
+        const currentStatus = getStatus(item.stock).key;
+        const matchesSearch =
+          item.name.toLowerCase().includes(search) ||
+          item.article.toLowerCase().includes(search) ||
+          item.warehouse.toLowerCase().includes(search);
+
+        const matchesCategory = category === 'all' || item.category === category;
+        const matchesStatus = status === 'all' || currentStatus === status;
+
+        return matchesSearch && matchesCategory && matchesStatus;
+      });
+
+      tableBody.innerHTML = '';
+
+      if (filteredItems.length === 0) {
+        tableBody.innerHTML = `
+          <tr>
+            <td colspan="7" class="muted">Позиции не найдены</td>
+          </tr>
+        `;
+        updateStats();
+        return;
+      }
+
+      filteredItems.forEach(item => {
+        const status = getStatus(item.stock);
+        const row = document.createElement('tr');
+
+        row.innerHTML = `
+          <td>${escapeHTML(item.name)}</td>
+          <td>${escapeHTML(item.article)}</td>
+          <td>${escapeHTML(item.category)}</td>
+          <td>${escapeHTML(item.warehouse)}</td>
+          <td>
+            <input
+              type="number"
+              min="0"
+              value="${item.stock}"
+              onchange="updateStock('${item.id}', this.value)"
+              style="max-width: 90px;"
+            />
+          </td>
+          <td><span class="badge ${status.className}">${status.title}</span></td>
+          <td>
+            <button class="btn-danger" onclick="deleteItem('${item.id}')">Удалить</button>
+          </td>
+        `;
+
+        tableBody.appendChild(row);
+      });
+
+      updateStats();
+    }
+
+    function updateStats() {
+      document.getElementById('totalItems').textContent = items.length;
+      document.getElementById('totalStock').textContent = items.reduce((sum, item) => sum + item.stock, 0);
+      document.getElementById('lowStock').textContent = items.filter(item => item.stock > 0 && item.stock <= 5).length;
+      document.getElementById('missingStock').textContent = items.filter(item => item.stock === 0).length;
+    }
+
+    function updateStock(id, value) {
+      const item = items.find(item => item.id === id);
+      if (!item) return;
+
+      item.stock = Math.max(0, Number(value));
+      saveItems();
+      renderTable();
+    }
+
+    function deleteItem(id) {
+      items = items.filter(item => item.id !== id);
+      saveItems();
+      renderTable();
+    }
+
+    function resetFilters() {
+      document.getElementById('search').value = '';
+      document.getElementById('categoryFilter').value = 'all';
+      document.getElementById('statusFilter').value = 'all';
+      renderTable();
+    }
+
+    function clearAll() {
+      if (!confirm('Удалить все позиции?')) return;
+      items = [];
+      saveItems();
+      renderTable();
+    }
+
+    function loadDemoData() {
+      items = [
+        {
+          id: crypto.randomUUID(),
+          name: 'Блузка женская голубая',
+          article: 'BLZ-0001',
+          category: 'Одежда',
+          stock: 24,
+          warehouse: 'Основной'
+        },
+        {
+          id: crypto.randomUUID(),
+          name: 'Рубашка женская белая',
+          article: 'RSH-0002',
+          category: 'Одежда',
+          stock: 4,
+          warehouse: 'Основной'
+        },
+        {
+          id: crypto.randomUUID(),
+          name: 'Пакет упаковочный',
+          article: 'UPK-0003',
+          category: 'Склад',
+          stock: 0,
+          warehouse: 'Склад №2'
+        },
+        {
+          id: crypto.randomUUID(),
+          name: 'Бирка размерная',
+          article: 'BRK-0004',
+          category: 'Склад',
+          stock: 120,
+          warehouse: 'Склад №2'
+        }
+      ];
+
+      saveItems();
+      renderTable();
+    }
+
+    function exportCSV() {
+      const header = ['Наименование', 'Артикул 1С', 'Категория', 'Склад', 'Остаток', 'Статус'];
+      const rows = items.map(item => [
+        item.name,
+        item.article,
+        item.category,
+        item.warehouse,
+        item.stock,
+        getStatus(item.stock).title
+      ]);
+
+      const csv = [header, ...rows]
+        .map(row => row.map(cell => `"${String(cell).replaceAll('"', '""')}"`).join(';'))
+        .join('\n');
+
+      const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = 'inventory_1c.csv';
+      link.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function saveItems() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+    }
+
+    function escapeHTML(value) {
+      return String(value)
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&#039;');
+    }
+
+    saveItems();
+    renderTable();
+  </script>
+</body>
+</html>
